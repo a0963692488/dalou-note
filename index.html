@@ -7,47 +7,41 @@
 <style>
 :root {
   --bg:#050507; --panel:#111114; --card:#1c1c1f; --card2:#242428; --text:#f5f5f7;
-  --muted:#a1a1aa; --line:#33333a; --blue:#0a84ff; --green:#34c759; --red:#ff453a; --yellow:#ffd60a;
+  --muted:#a1a1aa; --line:#33333a; --blue:#0a84ff; --green:#34c759; --red:#ff453a;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif}
 button,input,textarea{font-family:inherit}
-.app{max-width:1050px;margin:0 auto;padding:18px 14px 46px}
+.app{max-width:900px;margin:0 auto;padding:18px 14px 46px}
 .top{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg) 88%,rgba(5,5,7,0));padding:12px 0 16px}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row{display:flex;gap:10px;align-items:center}
 h1{font-size:30px;margin:0 0 12px;font-weight:950}
-.search{flex:1;min-width:220px;padding:15px 16px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:17px;outline:none}
-.btn{border:0;border-radius:15px;min-height:48px;padding:0 16px;font-size:16px;font-weight:850;cursor:pointer;color:white;background:var(--card2)}
-.btn.blue{background:var(--blue)} .btn.green{background:var(--green)} .btn.red{background:var(--red)} .btn.yellow{background:#6b5600;color:#fff}
-.status{color:var(--muted);font-size:13px;margin-top:8px}
-.tabs{display:flex;gap:8px;overflow:auto;padding:2px 0 10px;margin-top:10px}
-.tab{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:9px 13px;cursor:pointer}
-.tab.active{background:var(--blue);border-color:var(--blue);color:white}
-.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-top:8px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;cursor:pointer;min-height:118px}
+.search{flex:1;min-width:0;padding:15px 16px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:17px;outline:none}
+.btn{border:0;border-radius:15px;min-height:50px;padding:0 18px;font-size:17px;font-weight:900;cursor:pointer;color:white;background:var(--card2);text-decoration:none;display:flex;align-items:center;justify-content:center}
+.btn.blue{background:var(--blue)} .btn.green{background:var(--green)} .btn.red{background:var(--red)}
+.status{color:var(--muted);font-size:14px;margin-top:10px}
+.list{display:grid;gap:12px;margin-top:16px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;cursor:pointer}
 .item:hover{border-color:#666}
-.itemHead{display:flex;justify-content:space-between;gap:8px}
-.name{font-size:21px;font-weight:950} .fav{color:var(--yellow);font-size:20px}
-.meta{font-size:13px;color:var(--muted);margin-top:6px;word-break:break-all}
-.badge{display:inline-block;margin-top:10px;color:#d1d5db;border:1px solid #3f3f46;border-radius:999px;padding:4px 9px;font-size:12px}
+.name{font-size:23px;font-weight:950}
+.meta{font-size:15px;color:var(--muted);margin-top:7px;word-break:break-all}
 .detail{display:none}
 .back{display:inline-block;color:var(--blue);font-size:18px;text-decoration:none;margin:6px 0 18px;cursor:pointer}
 .hero{display:flex;align-items:center;gap:14px;margin-bottom:10px}
 .icon{font-size:42px} h2{font-size:34px;margin:0;font-weight:950}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin-top:12px}
-label{display:block;color:#d4d4d8;font-size:14px;font-weight:800;margin:0 0 7px}
-.field{width:100%;padding:13px 14px;border-radius:14px;border:1px solid #3a3a42;background:#111113;color:var(--text);font-size:16px;outline:none}
-textarea.field{min-height:230px;resize:vertical;line-height:1.55}
-.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
-.full{grid-column:1/-1}
-.small{font-size:13px;color:var(--muted);margin-top:8px;min-height:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;margin-top:14px}
+label{display:block;color:#d4d4d8;font-size:16px;font-weight:900;margin:0 0 8px}
+.field{width:100%;padding:15px 16px;border-radius:16px;border:1px solid #3a3a42;background:#111113;color:var(--text);font-size:18px;outline:none;margin-bottom:16px}
+textarea.field{min-height:260px;resize:vertical;line-height:1.55}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+.small{font-size:14px;color:var(--muted);margin-top:10px;min-height:18px}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99;align-items:flex-end;justify-content:center;padding:14px}
-.modalBox{width:min(720px,100%);max-height:88vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:16px}
-.modalTitle{font-size:24px;font-weight:950;margin:0 0 12px}
+.modalBox{width:min(680px,100%);max-height:88vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:18px}
+.modalTitle{font-size:24px;font-weight:950;margin:0 0 14px}
 .empty{text-align:center;color:var(--muted);padding:42px}
-hr{border:0;border-top:1px solid var(--line);margin:14px 0}
-@media(max-width:720px){.grid{grid-template-columns:1fr}.actions{grid-template-columns:1fr 1fr}h2{font-size:30px}.list{grid-template-columns:1fr}}
+@media(max-width:560px){
+  h1{font-size:28px} h2{font-size:30px} .actions{grid-template-columns:1fr} .btn{min-height:56px} textarea.field{min-height:300px}
+}
 </style>
 </head>
 <body>
@@ -56,13 +50,10 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     <div class="top">
       <h1>🏢 RB 大樓雲端筆記</h1>
       <div class="row">
-        <input id="search" class="search" placeholder="搜尋大樓、網址、分類、備註..." />
+        <input id="search" class="search" placeholder="搜尋大樓或網址..." />
         <button class="btn blue" id="addBtn">＋新增</button>
-        <button class="btn" id="exportBtn">備份</button>
-        <button class="btn" id="importBtn">還原</button>
       </div>
       <div id="status" class="status">雲端連線中...</div>
-      <div class="tabs" id="tabs"></div>
     </div>
     <div id="list" class="list"></div>
   </section>
@@ -71,25 +62,20 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
     <a id="back" class="back">‹ 返回大樓列表</a>
     <div class="hero"><div class="icon">🏢</div><h2 id="dTitle"></h2></div>
     <div id="dUrl" class="meta"></div>
+
     <div class="card">
-      <div class="grid">
-        <div><label>大樓名稱</label><input id="fName" class="field"></div>
-        <div><label>分類</label><input id="fCategory" class="field" placeholder="例如：Happy、社宅、一般"></div>
-        <div class="full"><label>RB 網址</label><input id="fUrl" class="field"></div>
-        <div><label>帳號</label><input id="fAccount" class="field"></div>
-        <div><label>密碼</label><input id="fPassword" class="field" type="password"></div>
-        <div><label>地址 / 位置</label><input id="fAddress" class="field"></div>
-        <div><label>聯絡人</label><input id="fContact" class="field"></div>
-        <div><label>電話</label><input id="fPhone" class="field"></div>
-        <div class="full"><label>備註</label><textarea id="fNote" class="field" placeholder="輸入注意事項、設備位置、登入提醒、處理紀錄..."></textarea></div>
-      </div>
+      <label>大樓名稱</label>
+      <input id="fName" class="field">
+
+      <label>RB 網址</label>
+      <input id="fUrl" class="field">
+
+      <label>備註</label>
+      <textarea id="fNote" class="field" placeholder="輸入注意事項、設備位置、登入提醒、處理紀錄..."></textarea>
+
       <div class="actions">
-        <button class="btn yellow" id="favBtn">☆ 收藏</button>
-        <button class="btn" id="showPassBtn">顯示密碼</button>
-        <button class="btn" id="copyBtn">複製資料</button>
-        <a class="btn blue" id="rbBtn" target="_blank" rel="noopener" style="text-decoration:none;display:flex;align-items:center;justify-content:center">進入 RB</a>
         <button class="btn green" id="saveBtn">立即儲存</button>
-        <button class="btn red" id="deleteBtn">刪除大樓</button>
+        <a class="btn blue" id="rbBtn" target="_blank" rel="noopener">進入 RB</a>
       </div>
       <div id="saveState" class="small"></div>
       <div id="lastUpdate" class="small"></div>
@@ -99,12 +85,11 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 
 <div id="modal" class="modal">
   <div class="modalBox">
-    <h3 class="modalTitle" id="modalTitle">新增大樓</h3>
-    <div class="grid">
-      <div><label>大樓名稱</label><input id="mName" class="field"></div>
-      <div><label>分類</label><input id="mCategory" class="field" value="一般"></div>
-      <div class="full"><label>RB 網址</label><input id="mUrl" class="field" placeholder="http://...:9000"></div>
-    </div>
+    <h3 class="modalTitle">新增大樓</h3>
+    <label>大樓名稱</label>
+    <input id="mName" class="field">
+    <label>RB 網址</label>
+    <input id="mUrl" class="field" placeholder="http://...:9000">
     <div class="actions">
       <button class="btn blue" id="modalSave">新增</button>
       <button class="btn" id="modalCancel">取消</button>
@@ -112,11 +97,9 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
   </div>
 </div>
 
-<input type="file" id="fileInput" accept="application/json" style="display:none">
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD3vNxPvIjTRdZj5Puu8KYtejKMv0C66jI",
@@ -127,60 +110,46 @@ const firebaseConfig = {
   appId: "1:193771549362:web:b539bfb17165d15aa7cfab"
 };
 
-const DEFAULT_BUILDINGS = [{"name": "林森166", "url": "http://122.117.133.121:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "皇苑創世紀", "url": "http://59.127.165.196:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "京城四季", "url": "http://122.117.195.122:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "太普D&G", "url": "http://114.35.241.10:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "河畔Happy", "url": "http://122.117.213.110:9000", "category": "Happy", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "遠東新公園", "url": "http://114.35.212.96:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "明水漾", "url": "http://211.72.60.223:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "Happy 悅讀", "url": "http://122.117.49.23:9000", "category": "Happy", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "交響苑", "url": "http://125.227.231.51:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "兩廳院", "url": "http://211.20.234.174:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "國城MRT", "url": "http://220.135.131.212:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "尊峰", "url": "http://218.161.115.236:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "快可易", "url": "http://220.133.228.150:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "棋琴11重奏", "url": "http://59.127.177.112:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "棋琴20重奏_1", "url": "http://122.117.49.117:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "棋琴20重奏_2", "url": "http://114.35.201.236:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "浪漫滿屋", "url": "http://122.117.57.131:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "芳崗澄品", "url": "http://211.72.60.37:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "爵美大樓", "url": "http://220.135.240.236:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "小王子", "url": "http://122.117.49.10:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "中正大樓", "url": "http://59.127.179.135:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "水森林", "url": "http://220.130.243.157:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "水舞間", "url": "http://59.127.228.73:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "世紀星鑽一心", "url": "http://59.127.178.41:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "世紀星鑽河北", "url": "http://114.35.240.146:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "合群孝區", "url": "http://59.127.193.48:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "百達富御", "url": "http://122.117.49.69:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "城中星", "url": "http://122.117.230.146:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "香頌", "url": "http://122.117.49.229:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "Hi 協勝發", "url": "http://220.132.27.42:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "J時尚", "url": "http://220.134.182.61:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "MINE MINE", "url": "http://220.133.182.70:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "Super One", "url": "http://122.117.49.242:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "亞大樓", "url": "http://220.134.164.211:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "冠藝大樓", "url": "http://211.72.60.229:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "吉松頂園", "url": "http://220.134.182.97:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "堅山三川", "url": "http://59.127.165.155:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "太普上新光", "url": "http://125.229.27.45:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "悅讀天詩", "url": "http://122.117.213.130:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "悅讀泰郡", "url": "http://220.132.27.170:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "捷仕堡", "url": "http://220.134.242.140:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "捷運樓", "url": "http://122.117.49.52:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "文山.C", "url": "http://220.134.242.126:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "文蓮苑", "url": "http://122.117.195.13:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "文賢苑", "url": "http://114.35.240.239:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "日森大地", "url": "http://220.132.27.128:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "未來玩城市", "url": "http://59.127.166.55:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "沐提斯", "url": "http://59.127.135.3:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "河歌山", "url": "http://122.117.49.24:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "流行城市", "url": "http://59.127.190.217:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "海科棧", "url": "http://220.133.182.137:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "溫莎堡", "url": "http://220.135.131.72:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "獅甲國宅", "url": "http://59.125.159.177:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "祥城", "url": "http://114.35.240.155:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "築夢世紀", "url": "http://122.117.49.169:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "芳崗高鐵樓", "url": "http://125.227.227.47:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "荷必館", "url": "http://211.75.228.156:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "蔚藍海18", "url": "http://122.117.49.155:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "赫米斯", "url": "http://122.117.49.133:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "輕軌線上", "url": "http://60.249.137.193:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "達麗宮廷", "url": "http://122.117.213.79:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "陽光新未來", "url": "http://114.33.57.152:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "飛揚大樓", "url": "http://220.133.182.97:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "鳳凰時代", "url": "http://122.117.49.250:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}, {"name": "興連城PRO+", "url": "http://220.133.21.209:9000", "category": "一般", "note": "", "address": "", "account": "", "password": "", "contact": "", "phone": "", "favorite": false}];
+const DEFAULT_BUILDINGS = [{"name": "林森166", "url": "http://122.117.133.121:9000", "note": ""}, {"name": "皇苑創世紀", "url": "http://59.127.165.196:9000", "note": ""}, {"name": "京城四季", "url": "http://122.117.195.122:9000", "note": ""}, {"name": "太普D&G", "url": "http://114.35.241.10:9000", "note": ""}, {"name": "河畔Happy", "url": "http://122.117.213.110:9000", "note": ""}, {"name": "遠東新公園", "url": "http://114.35.212.96:9000", "note": ""}, {"name": "明水漾", "url": "http://211.72.60.223:9000", "note": ""}, {"name": "Happy 悅讀", "url": "http://122.117.49.23:9000", "note": ""}, {"name": "交響苑", "url": "http://125.227.231.51:9000", "note": ""}, {"name": "兩廳院", "url": "http://211.20.234.174:9000", "note": ""}, {"name": "國城MRT", "url": "http://220.135.131.212:9000", "note": ""}, {"name": "尊峰", "url": "http://218.161.115.236:9000", "note": ""}, {"name": "快可易", "url": "http://220.133.228.150:9000", "note": ""}, {"name": "棋琴11重奏", "url": "http://59.127.177.112:9000", "note": ""}, {"name": "棋琴20重奏_1", "url": "http://122.117.49.117:9000", "note": ""}, {"name": "棋琴20重奏_2", "url": "http://114.35.201.236:9000", "note": ""}, {"name": "浪漫滿屋", "url": "http://122.117.57.131:9000", "note": ""}, {"name": "芳崗澄品", "url": "http://211.72.60.37:9000", "note": ""}, {"name": "爵美大樓", "url": "http://220.135.240.236:9000", "note": ""}, {"name": "小王子", "url": "http://122.117.49.10:9000", "note": ""}, {"name": "中正大樓", "url": "http://59.127.179.135:9000", "note": ""}, {"name": "水森林", "url": "http://220.130.243.157:9000", "note": ""}, {"name": "水舞間", "url": "http://59.127.228.73:9000", "note": ""}, {"name": "世紀星鑽一心", "url": "http://59.127.178.41:9000", "note": ""}, {"name": "世紀星鑽河北", "url": "http://114.35.240.146:9000", "note": ""}, {"name": "合群孝區", "url": "http://59.127.193.48:9000", "note": ""}, {"name": "百達富御", "url": "http://122.117.49.69:9000", "note": ""}, {"name": "城中星", "url": "http://122.117.230.146:9000", "note": ""}, {"name": "香頌", "url": "http://122.117.49.229:9000", "note": ""}, {"name": "Hi 協勝發", "url": "http://220.132.27.42:9000", "note": ""}, {"name": "J時尚", "url": "http://220.134.182.61:9000", "note": ""}, {"name": "MINE MINE", "url": "http://220.133.182.70:9000", "note": ""}, {"name": "Super One", "url": "http://122.117.49.242:9000", "note": ""}, {"name": "亞大樓", "url": "http://220.134.164.211:9000", "note": ""}, {"name": "冠藝大樓", "url": "http://211.72.60.229:9000", "note": ""}, {"name": "吉松頂園", "url": "http://220.134.182.97:9000", "note": ""}, {"name": "堅山三川", "url": "http://59.127.165.155:9000", "note": ""}, {"name": "太普上新光", "url": "http://125.229.27.45:9000", "note": ""}, {"name": "悅讀天詩", "url": "http://122.117.213.130:9000", "note": ""}, {"name": "悅讀泰郡", "url": "http://220.132.27.170:9000", "note": ""}, {"name": "捷仕堡", "url": "http://220.134.242.140:9000", "note": ""}, {"name": "捷運樓", "url": "http://122.117.49.52:9000", "note": ""}, {"name": "文山.C", "url": "http://220.134.242.126:9000", "note": ""}, {"name": "文蓮苑", "url": "http://122.117.195.13:9000", "note": ""}, {"name": "文賢苑", "url": "http://114.35.240.239:9000", "note": ""}, {"name": "日森大地", "url": "http://220.132.27.128:9000", "note": ""}, {"name": "未來玩城市", "url": "http://59.127.166.55:9000", "note": ""}, {"name": "沐提斯", "url": "http://59.127.135.3:9000", "note": ""}, {"name": "河歌山", "url": "http://122.117.49.24:9000", "note": ""}, {"name": "流行城市", "url": "http://59.127.190.217:9000", "note": ""}, {"name": "海科棧", "url": "http://220.133.182.137:9000", "note": ""}, {"name": "溫莎堡", "url": "http://220.135.131.72:9000", "note": ""}, {"name": "獅甲國宅", "url": "http://59.125.159.177:9000", "note": ""}, {"name": "祥城", "url": "http://114.35.240.155:9000", "note": ""}, {"name": "築夢世紀", "url": "http://122.117.49.169:9000", "note": ""}, {"name": "芳崗高鐵樓", "url": "http://125.227.227.47:9000", "note": ""}, {"name": "荷必館", "url": "http://211.75.228.156:9000", "note": ""}, {"name": "蔚藍海18", "url": "http://122.117.49.155:9000", "note": ""}, {"name": "赫米斯", "url": "http://122.117.49.133:9000", "note": ""}, {"name": "輕軌線上", "url": "http://60.249.137.193:9000", "note": ""}, {"name": "達麗宮廷", "url": "http://122.117.213.79:9000", "note": ""}, {"name": "陽光新未來", "url": "http://114.33.57.152:9000", "note": ""}, {"name": "飛揚大樓", "url": "http://220.133.182.97:9000", "note": ""}, {"name": "鳳凰時代", "url": "http://122.117.49.250:9000", "note": ""}, {"name": "興連城PRO+", "url": "http://220.133.21.209:9000", "note": ""}];
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const col = collection(db, "buildings");
 
 let buildings = [];
 let currentId = null;
-let currentTab = "全部";
 let timer = null;
 let remoteUpdate = false;
-const $ = id => document.getElementById(id);
 
+const $ = id => document.getElementById(id);
 function idFor(name) { return encodeURIComponent(name.trim()).replaceAll("%","_"); }
-function val(id) { return $(id).value.trim(); }
-function setVal(id,v) { $(id).value = v || ""; }
 function esc(s) { return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+function val(id) { return $(id).value.trim(); }
+function setVal(id, v) { $(id).value = v || ""; }
 function getCurrent() { return buildings.find(b => b.id === currentId); }
 
-function normalize(id, d) {
-  return {
-    id,
-    name: d.name || "",
-    url: d.url || "",
-    category: d.category || "一般",
-    note: d.note || "",
-    address: d.address || "",
-    account: d.account || "",
-    password: d.password || "",
-    contact: d.contact || "",
-    phone: d.phone || "",
-    favorite: !!d.favorite,
-    lastUsed: d.lastUsed || 0,
-    updatedAt: d.updatedAt || null
-  };
-}
-
 async function seedIfEmpty() {
-  if (localStorage.getItem("rb_seed_done_v2")) return;
-  localStorage.setItem("rb_seed_done_v2","1");
+  if (localStorage.getItem("rb_seed_simple_done")) return;
+  localStorage.setItem("rb_seed_simple_done","1");
   for (const b of DEFAULT_BUILDINGS) {
-    await setDoc(doc(db, "buildings", idFor(b.name)), {...b, createdAt: serverTimestamp(), updatedAt: serverTimestamp()}, {merge:true});
+    await setDoc(doc(db, "buildings", idFor(b.name)), {
+      name:b.name, url:b.url, note:b.note || "", createdAt:serverTimestamp(), updatedAt:serverTimestamp()
+    }, {merge:true});
   }
 }
 
 onSnapshot(col, async snap => {
   remoteUpdate = true;
-  buildings = snap.docs.map(d => normalize(d.id, d.data()));
+  buildings = snap.docs.map(d => {
+    const x = d.data();
+    return { id:d.id, name:x.name || "", url:x.url || "", note:x.note || "", updatedAt:x.updatedAt || null };
+  });
   if (buildings.length === 0) {
     $("status").textContent = "第一次初始化大樓資料中...";
     try { await seedIfEmpty(); } catch(e) { console.error(e); $("status").textContent = "初始化失敗，請確認 Firestore 規則"; }
   }
-  buildings.sort((a,b)=>(b.favorite-a.favorite) || (b.lastUsed||0)-(a.lastUsed||0) || a.name.localeCompare(b.name,"zh-Hant"));
+  buildings.sort((a,b)=>a.name.localeCompare(b.name,"zh-Hant"));
   $("status").textContent = "✅ 雲端同步中，共 " + buildings.length + " 棟大樓";
-  renderTabs(); renderList();
+  renderList();
   if (currentId && getCurrent()) fillDetail(getCurrent(), false);
   setTimeout(()=>remoteUpdate=false,0);
 }, err => {
@@ -188,28 +157,17 @@ onSnapshot(col, async snap => {
   $("status").textContent = "❌ 雲端讀寫失敗：請確認 Firebase Firestore 規則";
 });
 
-function renderTabs() {
-  const cats = ["全部","收藏",...Array.from(new Set(buildings.map(b=>b.category||"一般")))];
-  $("tabs").innerHTML = cats.map(c => `<button class="tab ${c===currentTab?'active':''}" data-tab="${esc(c)}">${esc(c)}</button>`).join("");
-  document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{currentTab=t.dataset.tab; renderTabs(); renderList();});
-}
-
 function renderList() {
   const q = $("search").value.trim().toLowerCase();
-  let arr = buildings.filter(b => {
-    const text = [b.name,b.url,b.category,b.note,b.address,b.account,b.contact,b.phone].join(" ").toLowerCase();
-    const tabOk = currentTab === "全部" || (currentTab === "收藏" ? b.favorite : b.category === currentTab);
-    return tabOk && text.includes(q);
-  });
+  const arr = buildings.filter(b => [b.name,b.url,b.note].join(" ").toLowerCase().includes(q));
   $("list").innerHTML = arr.map(b => `
     <div class="item" data-id="${esc(b.id)}">
-      <div class="itemHead"><div class="name">🏢 ${esc(b.name)}</div><div class="fav">${b.favorite?'★':''}</div></div>
+      <div class="name">🏢 ${esc(b.name)}</div>
       <div class="meta">${esc(b.url)}</div>
-      <span class="badge">${esc(b.category || '一般')}</span>
-      ${b.note ? '<div class="meta">📝 '+esc(b.note.slice(0,45))+(b.note.length>45?'...':'')+'</div>' : ''}
+      ${b.note ? '<div class="meta">📝 '+esc(b.note.slice(0,60))+(b.note.length>60?'...':'')+'</div>' : ''}
     </div>
   `).join("") || `<div class="empty">找不到資料</div>`;
-  document.querySelectorAll(".item").forEach(el=>el.onclick=()=>openDetail(el.dataset.id));
+  document.querySelectorAll(".item").forEach(el => el.onclick = () => openDetail(el.dataset.id));
 }
 
 function openDetail(id) {
@@ -219,7 +177,6 @@ function openDetail(id) {
   $("home").style.display = "none";
   $("detail").style.display = "block";
   fillDetail(b, true);
-  setDoc(doc(db,"buildings",id), {lastUsed: Date.now()}, {merge:true});
   window.scrollTo(0,0);
 }
 
@@ -227,101 +184,67 @@ function fillDetail(b, overwrite=true) {
   if (!overwrite && document.activeElement && ["INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
   $("dTitle").textContent = b.name;
   $("dUrl").textContent = b.url;
-  setVal("fName", b.name); setVal("fCategory", b.category); setVal("fUrl", b.url);
-  setVal("fAccount", b.account); setVal("fPassword", b.password); setVal("fAddress", b.address);
-  setVal("fContact", b.contact); setVal("fPhone", b.phone); setVal("fNote", b.note);
+  setVal("fName", b.name);
+  setVal("fUrl", b.url);
+  $("fNote").value = b.note || "";
   $("rbBtn").href = b.url || "#";
-  $("favBtn").textContent = b.favorite ? "★ 已收藏" : "☆ 收藏";
   $("lastUpdate").textContent = b.updatedAt?.toDate ? "最後更新：" + b.updatedAt.toDate().toLocaleString("zh-TW") : "";
 }
 
 async function saveCurrent(manual=false) {
   if (!currentId || remoteUpdate) return;
-  const old = getCurrent();
   const name = val("fName");
-  if (!name) return alert("大樓名稱不能空白");
+  const url = val("fUrl");
+  if (!name || !url) return;
   const newId = idFor(name);
-  const data = {
-    name, category: val("fCategory") || "一般", url: val("fUrl"),
-    account: val("fAccount"), password: val("fPassword"), address: val("fAddress"),
-    contact: val("fContact"), phone: val("fPhone"), note: $("fNote").value,
-    favorite: old?.favorite || false, updatedAt: serverTimestamp()
-  };
   $("saveState").textContent = "同步中...";
   try {
-    await setDoc(doc(db,"buildings",newId), data, {merge:true});
-    if (newId !== currentId) await deleteDoc(doc(db,"buildings",currentId));
+    await setDoc(doc(db,"buildings",newId), {
+      name, url, note:$("fNote").value, updatedAt:serverTimestamp()
+    }, {merge:true});
     currentId = newId;
     $("saveState").textContent = manual ? "✅ 已儲存" : "✅ 已自動同步";
   } catch(e) {
-    console.error(e); $("saveState").textContent = "❌ 同步失敗，請確認 Firestore 規則";
+    console.error(e);
+    $("saveState").textContent = "❌ 同步失敗，請確認 Firestore 規則";
   }
 }
 
-["fName","fCategory","fUrl","fAccount","fPassword","fAddress","fContact","fPhone","fNote"].forEach(id=>{
-  $(id).addEventListener("input",()=>{ clearTimeout(timer); $("saveState").textContent="準備同步..."; timer=setTimeout(()=>saveCurrent(false),700); });
+["fName","fUrl","fNote"].forEach(id => {
+  $(id).addEventListener("input", () => {
+    clearTimeout(timer);
+    $("saveState").textContent = "準備同步...";
+    timer = setTimeout(() => saveCurrent(false), 700);
+  });
 });
 
 $("saveBtn").onclick = () => saveCurrent(true);
-$("back").onclick = () => { $("detail").style.display="none"; $("home").style.display="block"; currentId=null; renderList(); window.scrollTo(0,0); };
+$("back").onclick = () => {
+  $("detail").style.display = "none";
+  $("home").style.display = "block";
+  currentId = null;
+  renderList();
+  window.scrollTo(0,0);
+};
 $("search").addEventListener("input", renderList);
 
-$("favBtn").onclick = async () => {
-  const b = getCurrent(); if(!b) return;
-  await setDoc(doc(db,"buildings",b.id), {favorite: !b.favorite, updatedAt: serverTimestamp()}, {merge:true});
-};
-
-$("showPassBtn").onclick = () => {
-  $("fPassword").type = $("fPassword").type === "password" ? "text" : "password";
-  $("showPassBtn").textContent = $("fPassword").type === "password" ? "顯示密碼" : "隱藏密碼";
-};
-
-$("copyBtn").onclick = async () => {
-  const b = getCurrent(); if(!b) return;
-  const text = `大樓：${val("fName")}\nRB：${val("fUrl")}\n帳號：${val("fAccount")}\n密碼：${val("fPassword")}\n地址：${val("fAddress")}\n聯絡人：${val("fContact")}\n電話：${val("fPhone")}\n備註：\n${$("fNote").value}`;
-  await navigator.clipboard.writeText(text);
-  $("saveState").textContent = "✅ 已複製資料";
-};
-
-$("deleteBtn").onclick = async () => {
-  const b=getCurrent(); if(!b) return;
-  if(confirm("確定刪除「"+b.name+"」？")) {
-    await deleteDoc(doc(db,"buildings",b.id));
-    $("back").click();
-  }
-};
-
 $("addBtn").onclick = () => {
-  setVal("mName",""); setVal("mCategory","一般"); setVal("mUrl","");
-  $("modal").style.display="flex"; $("mName").focus();
+  setVal("mName","");
+  setVal("mUrl","");
+  $("modal").style.display = "flex";
+  $("mName").focus();
 };
-$("modalCancel").onclick = () => $("modal").style.display="none";
+$("modalCancel").onclick = () => $("modal").style.display = "none";
 $("modalSave").onclick = async () => {
-  const name = val("mName"), url = val("mUrl"); if(!name || !url) return alert("名稱和網址都要填");
+  const name = val("mName");
+  const url = val("mUrl");
+  if (!name || !url) return alert("名稱和網址都要填");
   const id = idFor(name);
-  await setDoc(doc(db,"buildings",id), {name, url, category: val("mCategory") || "一般", note:"", address:"", account:"", password:"", contact:"", phone:"", favorite:false, createdAt: serverTimestamp(), updatedAt: serverTimestamp()}, {merge:true});
-  $("modal").style.display="none";
-};
-
-$("exportBtn").onclick = () => {
-  const blob = new Blob([JSON.stringify(buildings, null, 2)], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "rb-buildings-backup.json";
-  a.click();
-};
-
-$("importBtn").onclick = () => $("fileInput").click();
-$("fileInput").onchange = async e => {
-  const file = e.target.files[0]; if(!file) return;
-  const data = JSON.parse(await file.text());
-  if(!Array.isArray(data)) return alert("備份格式不對");
-  if(!confirm("確定匯入？同名大樓會覆蓋。")) return;
-  for (const b of data) {
-    if(!b.name) continue;
-    await setDoc(doc(db,"buildings",idFor(b.name)), {...b, updatedAt: serverTimestamp()}, {merge:true});
-  }
-  alert("匯入完成");
+  await setDoc(doc(db,"buildings",id), {
+    name, url, note:"", createdAt:serverTimestamp(), updatedAt:serverTimestamp()
+  }, {merge:true});
+  $("modal").style.display = "none";
+  openDetail(id);
 };
 </script>
 </body>
