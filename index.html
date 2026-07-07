@@ -39,6 +39,16 @@ textarea.field{min-height:260px;resize:vertical;line-height:1.55}
 .modalBox{width:min(680px,100%);max-height:88vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:18px}
 .modalTitle{font-size:24px;font-weight:950;margin:0 0 14px}
 .empty{text-align:center;color:var(--muted);padding:42px}
+.hubPage{display:none}
+.hubList{display:grid;gap:12px;margin-top:12px}
+.hubCard{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:15px}
+.hubTitle{font-size:21px;font-weight:950;margin-bottom:8px}
+.ports{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.port{min-width:48px;height:44px;border-radius:12px;border:1px solid #444;background:#111;color:#fff;font-weight:900;font-size:16px}
+.port.used{background:#0b3b1a;border-color:#34c759}
+.port.bad{background:#471313;border-color:#ff453a}
+.port.backup{background:#483a00;border-color:#ffd60a}
+.btn.orange{background:#ff9f0a}
 @media(max-width:560px){
   h1{font-size:28px} h2{font-size:30px} .actions{grid-template-columns:1fr} .btn{min-height:56px} textarea.field{min-height:300px}
 }
@@ -76,10 +86,28 @@ textarea.field{min-height:260px;resize:vertical;line-height:1.55}
       <div class="actions">
         <button class="btn green" id="saveBtn">立即儲存</button>
         <a class="btn blue" id="rbBtn" target="_blank" rel="noopener">進入 RB</a>
+        <button class="btn orange" id="hubBtn">HUB</button>
       </div>
       <div id="saveState" class="small"></div>
       <div id="lastUpdate" class="small"></div>
     </div>
+  </section>
+
+  <section id="hubPage" class="hubPage">
+    <a id="hubBack" class="back">‹ 返回大樓資料</a>
+    <div class="hero"><div class="icon">🔌</div><h2 id="hubTitle">HUB</h2></div>
+    <div class="meta">記錄幾棟、幾號、幾樓、孔位用途</div>
+    <div class="card">
+      <label>棟別</label>
+      <input id="hBlock" class="field" placeholder="A棟">
+      <label>號碼 / 樓層</label>
+      <input id="hLocation" class="field" placeholder="33號7F">
+      <label>孔數</label>
+      <input id="hCount" class="field" type="number" value="4" min="1" max="48">
+      <button class="btn orange" id="addHubBtn">＋新增 HUB</button>
+      <div id="hubSaveState" class="small"></div>
+    </div>
+    <div id="hubList" class="hubList"></div>
   </section>
 </div>
 
@@ -132,7 +160,7 @@ async function seedIfEmpty() {
   localStorage.setItem("rb_seed_simple_done","1");
   for (const b of DEFAULT_BUILDINGS) {
     await setDoc(doc(db, "buildings", idFor(b.name)), {
-      name:b.name, url:b.url, note:b.note || "", createdAt:serverTimestamp(), updatedAt:serverTimestamp()
+      name:b.name, url:b.url, note:b.note || "", hub:[], createdAt:serverTimestamp(), updatedAt:serverTimestamp()
     }, {merge:true});
   }
 }
@@ -141,7 +169,7 @@ onSnapshot(col, async snap => {
   remoteUpdate = true;
   buildings = snap.docs.map(d => {
     const x = d.data();
-    return { id:d.id, name:x.name || "", url:x.url || "", note:x.note || "", updatedAt:x.updatedAt || null };
+    return { id:d.id, name:x.name || "", url:x.url || "", note:x.note || "", hub:Array.isArray(x.hub)?x.hub:[], updatedAt:x.updatedAt || null };
   });
   if (buildings.length === 0) {
     $("status").textContent = "第一次初始化大樓資料中...";
@@ -150,7 +178,7 @@ onSnapshot(col, async snap => {
   buildings.sort((a,b)=>a.name.localeCompare(b.name,"zh-Hant"));
   $("status").textContent = "✅ 雲端同步中，共 " + buildings.length + " 棟大樓";
   renderList();
-  if (currentId && getCurrent()) fillDetail(getCurrent(), false);
+  if (currentId && getCurrent()) { fillDetail(getCurrent(), false); if ($("hubPage").style.display === "block") renderHub(); }
   setTimeout(()=>remoteUpdate=false,0);
 }, err => {
   console.error(err);
@@ -164,6 +192,7 @@ function renderList() {
     <div class="item" data-id="${esc(b.id)}">
       <div class="name">🏢 ${esc(b.name)}</div>
       <div class="meta">${esc(b.url)}</div>
+      ${b.hub?.length ? '<div class="meta">🔌 HUB：'+b.hub.length+' 組</div>' : ''}
       ${b.note ? '<div class="meta">📝 '+esc(b.note.slice(0,60))+(b.note.length>60?'...':'')+'</div>' : ''}
     </div>
   `).join("") || `<div class="empty">找不到資料</div>`;
@@ -175,6 +204,7 @@ function openDetail(id) {
   const b = getCurrent();
   if (!b) return;
   $("home").style.display = "none";
+  $("hubPage").style.display = "none";
   $("detail").style.display = "block";
   fillDetail(b, true);
   window.scrollTo(0,0);
@@ -193,6 +223,7 @@ function fillDetail(b, overwrite=true) {
 
 async function saveCurrent(manual=false) {
   if (!currentId || remoteUpdate) return;
+  const old = getCurrent();
   const name = val("fName");
   const url = val("fUrl");
   if (!name || !url) return;
@@ -200,7 +231,7 @@ async function saveCurrent(manual=false) {
   $("saveState").textContent = "同步中...";
   try {
     await setDoc(doc(db,"buildings",newId), {
-      name, url, note:$("fNote").value, updatedAt:serverTimestamp()
+      name, url, note:$("fNote").value, hub:old?.hub || [], updatedAt:serverTimestamp()
     }, {merge:true});
     currentId = newId;
     $("saveState").textContent = manual ? "✅ 已儲存" : "✅ 已自動同步";
@@ -241,11 +272,100 @@ $("modalSave").onclick = async () => {
   if (!name || !url) return alert("名稱和網址都要填");
   const id = idFor(name);
   await setDoc(doc(db,"buildings",id), {
-    name, url, note:"", createdAt:serverTimestamp(), updatedAt:serverTimestamp()
+    name, url, note:"", hub:[], createdAt:serverTimestamp(), updatedAt:serverTimestamp()
   }, {merge:true});
   $("modal").style.display = "none";
   openDetail(id);
 };
+
+
+$("hubBtn").onclick = () => {
+  const b = getCurrent(); if (!b) return;
+  $("detail").style.display = "none";
+  $("hubPage").style.display = "block";
+  $("hubTitle").textContent = b.name + " HUB";
+  renderHub();
+  window.scrollTo(0,0);
+};
+
+$("hubBack").onclick = () => {
+  $("hubPage").style.display = "none";
+  $("detail").style.display = "block";
+  window.scrollTo(0,0);
+};
+
+async function saveHub(hub) {
+  const b = getCurrent(); if (!b) return;
+  await setDoc(doc(db,"buildings",b.id), { hub, updatedAt:serverTimestamp() }, {merge:true});
+  $("hubSaveState").textContent = "✅ HUB 已同步";
+}
+
+$("addHubBtn").onclick = async () => {
+  const b = getCurrent(); if (!b) return;
+  const block = val("hBlock") || "A棟";
+  const location = val("hLocation");
+  const count = Math.max(1, Math.min(48, parseInt(val("hCount") || "4", 10)));
+  if (!location) return alert("請輸入號碼/樓層，例如：33號7F");
+  const ports = Array.from({length:count}, (_,i)=>({no:String(i+1), text:"", status:"empty"}));
+  const hub = [...(b.hub || []), {id:Date.now().toString(), block, location, ports}];
+  await saveHub(hub);
+  setVal("hLocation","");
+  renderHub();
+};
+
+function renderHub() {
+  const b = getCurrent(); if (!b) return;
+  const hub = b.hub || [];
+  $("hubList").innerHTML = hub.map((h, hi) => `
+    <div class="hubCard">
+      <div class="hubTitle">${esc(h.block)}　${esc(h.location)}</div>
+      <div class="ports">
+        ${(h.ports||[]).map((p, pi)=>`<button class="port ${p.status||''}" data-hi="${hi}" data-pi="${pi}">${esc(p.no)}</button>`).join("")}
+      </div>
+      <div class="meta">${(h.ports||[]).filter(p=>p.text).map(p=>p.no+'：'+p.text).join('　')}</div>
+      <div class="actions" style="margin-top:12px">
+        <button class="btn" data-edit="${hi}">修改標題</button>
+        <button class="btn" data-del="${hi}">刪除這組</button>
+      </div>
+    </div>
+  `).join("") || `<div class="empty">尚無 HUB，先新增一組，例如 A棟 / 33號7F / 4孔</div>`;
+
+  document.querySelectorAll(".port").forEach(btn => btn.onclick = async () => {
+    const b = getCurrent();
+    const hub = JSON.parse(JSON.stringify(b.hub || []));
+    const h = hub[btn.dataset.hi];
+    const p = h.ports[btn.dataset.pi];
+    const text = prompt("孔位 " + p.no + " 用途/備註：", p.text || "");
+    if (text === null) return;
+    p.text = text;
+    const status = prompt("狀態：empty 空孔 / used 使用 / bad 故障 / backup 備用", p.status || "empty");
+    p.status = ["empty","used","bad","backup"].includes(status) ? status : "empty";
+    await saveHub(hub);
+    renderHub();
+  });
+
+  document.querySelectorAll("[data-edit]").forEach(btn => btn.onclick = async () => {
+    const b = getCurrent();
+    const hub = JSON.parse(JSON.stringify(b.hub || []));
+    const h = hub[btn.dataset.edit];
+    const block = prompt("棟別：", h.block || "A棟"); if (block === null) return;
+    const location = prompt("號碼/樓層：", h.location || "33號7F"); if (location === null) return;
+    h.block = block; h.location = location;
+    await saveHub(hub);
+    renderHub();
+  });
+
+  document.querySelectorAll("[data-del]").forEach(btn => btn.onclick = async () => {
+    const b = getCurrent();
+    const hub = JSON.parse(JSON.stringify(b.hub || []));
+    const h = hub[btn.dataset.del];
+    if (!confirm("刪除 " + h.block + " " + h.location + "？")) return;
+    hub.splice(Number(btn.dataset.del), 1);
+    await saveHub(hub);
+    renderHub();
+  });
+}
+
 </script>
 </body>
 </html>
