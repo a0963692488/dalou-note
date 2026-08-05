@@ -58,6 +58,9 @@ textarea.field{min-height:260px;resize:vertical;line-height:1.55}
 .photoImg{width:100%;display:block;border-radius:14px;background:#000;max-height:520px;object-fit:contain}
 .photoActions{display:flex;gap:10px;margin-top:10px}
 .photoActions .btn{flex:1}
+.photoEntry{display:none}
+.photoHeader{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.photoCount{color:var(--muted);font-size:14px}
 @media(max-width:560px){
   h1{font-size:28px} h2{font-size:30px} .actions{grid-template-columns:1fr} .btn{min-height:56px} textarea.field{min-height:300px}
 }
@@ -99,17 +102,28 @@ textarea.field{min-height:260px;resize:vertical;line-height:1.55}
       </div>
 
       <div class="photoSection">
-        <div class="photoToolbar">
-          <label for="photoFile" class="btn" style="margin:0;cursor:pointer">📷 新增照片備註</label>
-          <input id="photoFile" class="photoInput" type="file" accept="image/*">
-        </div>
-        <div id="photoState" class="small">免費版：照片會先壓縮，再存進 Firestore。</div>
-        <div id="photoList" class="photoList"></div>
+        <button class="btn" id="photoBtn">📷 照片備註 <span id="photoCountBtn" style="margin-left:8px"></span></button>
       </div>
 
       <div id="saveState" class="small"></div>
       <div id="lastUpdate" class="small"></div>
     </div>
+  </section>
+
+  <section id="photoEntry" class="photoEntry">
+    <a id="photoBack" class="back">‹ 返回大樓資料</a>
+    <div class="photoHeader">
+      <div class="hero" style="margin:0"><div class="icon">📷</div><h2 id="photoTitle">照片備註</h2></div>
+      <div id="photoCount" class="photoCount"></div>
+    </div>
+    <div class="card">
+      <div class="photoToolbar">
+        <label for="photoFile" class="btn blue" style="margin:0;cursor:pointer">＋新增照片</label>
+        <input id="photoFile" class="photoInput" type="file" accept="image/*">
+      </div>
+      <div id="photoState" class="small">免費版：照片會先壓縮，再存進 Firestore。</div>
+    </div>
+    <div id="photoList" class="photoList"></div>
   </section>
 
   <section id="hubPage" class="hubPage">
@@ -226,6 +240,7 @@ function openDetail(id) {
   if (!b) return;
   $("home").style.display = "none";
   $("hubPage").style.display = "none";
+  $("photoEntry").style.display = "none";
   $("detail").style.display = "block";
   fillDetail(b, true);
   startPhotoListener();
@@ -275,6 +290,7 @@ $("saveBtn").onclick = () => saveCurrent(true);
 $("back").onclick = () => {
   if (photoUnsub) { photoUnsub(); photoUnsub = null; }
   $("detail").style.display = "none";
+  $("photoEntry").style.display = "none";
   $("home").style.display = "block";
   currentId = null;
   renderList();
@@ -349,12 +365,37 @@ function startPhotoListener() {
   photoUnsub = onSnapshot(photoCol, snap => {
     currentPhotos = snap.docs.map(d => ({ id:d.id, ...d.data() }));
     currentPhotos.sort((a,b) => (a.createdAtMs||0) - (b.createdAtMs||0));
-    renderPhotos();
+    updatePhotoCount();
+    if ($("photoEntry").style.display === "block") renderPhotos();
   }, err => {
     console.error(err);
     $("photoState").textContent = "❌ 照片讀取失敗，請確認 Firestore 規則";
   });
 }
+
+function updatePhotoCount() {
+  const n = currentPhotos.length;
+  if ($("photoCountBtn")) $("photoCountBtn").textContent = n ? `(${n})` : "";
+  if ($("photoCount")) $("photoCount").textContent = `${n} 張照片`;
+}
+
+$("photoBtn").onclick = () => {
+  const b = getCurrent();
+  if (!b) return;
+  $("detail").style.display = "none";
+  $("hubPage").style.display = "none";
+  $("photoEntry").style.display = "block";
+  $("photoTitle").textContent = b.name + "｜照片備註";
+  updatePhotoCount();
+  renderPhotos();
+  window.scrollTo(0,0);
+};
+
+$("photoBack").onclick = () => {
+  $("photoEntry").style.display = "none";
+  $("detail").style.display = "block";
+  window.scrollTo(0,0);
+};
 
 $("photoFile").onchange = async () => {
   const file = $("photoFile").files[0];
@@ -456,6 +497,7 @@ function renderPhotos() {
 $("hubBtn").onclick = () => {
   const b = getCurrent(); if (!b) return;
   $("detail").style.display = "none";
+  $("photoEntry").style.display = "none";
   $("hubPage").style.display = "block";
   $("hubTitle").textContent = b.name + " HUB";
   renderHub();
