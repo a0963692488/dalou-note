@@ -49,6 +49,15 @@ textarea.field{min-height:260px;resize:vertical;line-height:1.55}
 .port.bad{background:#471313;border-color:#ff453a}
 .port.backup{background:#483a00;border-color:#ffd60a}
 .btn.orange{background:#ff9f0a}
+.photoSection{margin-top:12px}
+.photoToolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.photoInput{display:none}
+.photoList{display:grid;gap:12px;margin-top:12px}
+.photoCard{background:#111113;border:1px solid #3a3a42;border-radius:18px;padding:12px}
+.photoNote{width:100%;padding:12px 14px;border-radius:14px;border:1px solid #3a3a42;background:#0d0d0f;color:var(--text);font-size:16px;outline:none;margin-bottom:10px}
+.photoImg{width:100%;display:block;border-radius:14px;background:#000;max-height:520px;object-fit:contain}
+.photoActions{display:flex;gap:10px;margin-top:10px}
+.photoActions .btn{flex:1}
 @media(max-width:560px){
   h1{font-size:28px} h2{font-size:30px} .actions{grid-template-columns:1fr} .btn{min-height:56px} textarea.field{min-height:300px}
 }
@@ -88,6 +97,16 @@ textarea.field{min-height:260px;resize:vertical;line-height:1.55}
         <a class="btn blue" id="rbBtn" target="_blank" rel="noopener">進入 RB</a>
         <button class="btn orange" id="hubBtn">HUB</button>
       </div>
+
+      <div class="photoSection">
+        <div class="photoToolbar">
+          <label for="photoFile" class="btn" style="margin:0;cursor:pointer">📷 新增照片備註</label>
+          <input id="photoFile" class="photoInput" type="file" accept="image/*">
+        </div>
+        <div id="photoState" class="small"></div>
+        <div id="photoList" class="photoList"></div>
+      </div>
+
       <div id="saveState" class="small"></div>
       <div id="lastUpdate" class="small"></div>
     </div>
@@ -128,6 +147,7 @@ textarea.field{min-height:260px;resize:vertical;line-height:1.55}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 import { getFirestore, collection, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD3vNxPvIjTRdZj5Puu8KYtejKMv0C66jI",
@@ -141,6 +161,7 @@ const firebaseConfig = {
 const DEFAULT_BUILDINGS = [{"name": "林森166", "url": "http://122.117.133.121:9000", "note": ""}, {"name": "皇苑創世紀", "url": "http://59.127.165.196:9000", "note": ""}, {"name": "京城四季", "url": "http://122.117.195.122:9000", "note": ""}, {"name": "太普D&G", "url": "http://114.35.241.10:9000", "note": ""}, {"name": "河畔Happy", "url": "http://122.117.213.110:9000", "note": ""}, {"name": "遠東新公園", "url": "http://114.35.212.96:9000", "note": ""}, {"name": "明水漾", "url": "http://211.72.60.223:9000", "note": ""}, {"name": "Happy 悅讀", "url": "http://122.117.49.23:9000", "note": ""}, {"name": "交響苑", "url": "http://125.227.231.51:9000", "note": ""}, {"name": "兩廳院", "url": "http://211.20.234.174:9000", "note": ""}, {"name": "國城MRT", "url": "http://220.135.131.212:9000", "note": ""}, {"name": "尊峰", "url": "http://218.161.115.236:9000", "note": ""}, {"name": "快可易", "url": "http://220.133.228.150:9000", "note": ""}, {"name": "棋琴11重奏", "url": "http://59.127.177.112:9000", "note": ""}, {"name": "棋琴20重奏_1", "url": "http://122.117.49.117:9000", "note": ""}, {"name": "棋琴20重奏_2", "url": "http://114.35.201.236:9000", "note": ""}, {"name": "浪漫滿屋", "url": "http://122.117.57.131:9000", "note": ""}, {"name": "芳崗澄品", "url": "http://211.72.60.37:9000", "note": ""}, {"name": "爵美大樓", "url": "http://220.135.240.236:9000", "note": ""}, {"name": "小王子", "url": "http://122.117.49.10:9000", "note": ""}, {"name": "中正大樓", "url": "http://59.127.179.135:9000", "note": ""}, {"name": "水森林", "url": "http://220.130.243.157:9000", "note": ""}, {"name": "水舞間", "url": "http://59.127.228.73:9000", "note": ""}, {"name": "世紀星鑽一心", "url": "http://59.127.178.41:9000", "note": ""}, {"name": "世紀星鑽河北", "url": "http://114.35.240.146:9000", "note": ""}, {"name": "合群孝區", "url": "http://59.127.193.48:9000", "note": ""}, {"name": "百達富御", "url": "http://122.117.49.69:9000", "note": ""}, {"name": "城中星", "url": "http://122.117.230.146:9000", "note": ""}, {"name": "香頌", "url": "http://122.117.49.229:9000", "note": ""}, {"name": "Hi 協勝發", "url": "http://220.132.27.42:9000", "note": ""}, {"name": "J時尚", "url": "http://220.134.182.61:9000", "note": ""}, {"name": "MINE MINE", "url": "http://220.133.182.70:9000", "note": ""}, {"name": "Super One", "url": "http://122.117.49.242:9000", "note": ""}, {"name": "亞大樓", "url": "http://220.134.164.211:9000", "note": ""}, {"name": "冠藝大樓", "url": "http://211.72.60.229:9000", "note": ""}, {"name": "吉松頂園", "url": "http://220.134.182.97:9000", "note": ""}, {"name": "堅山三川", "url": "http://59.127.165.155:9000", "note": ""}, {"name": "太普上新光", "url": "http://125.229.27.45:9000", "note": ""}, {"name": "悅讀天詩", "url": "http://122.117.213.130:9000", "note": ""}, {"name": "悅讀泰郡", "url": "http://220.132.27.170:9000", "note": ""}, {"name": "捷仕堡", "url": "http://220.134.242.140:9000", "note": ""}, {"name": "捷運樓", "url": "http://122.117.49.52:9000", "note": ""}, {"name": "文山.C", "url": "http://220.134.242.126:9000", "note": ""}, {"name": "文蓮苑", "url": "http://122.117.195.13:9000", "note": ""}, {"name": "文賢苑", "url": "http://114.35.240.239:9000", "note": ""}, {"name": "日森大地", "url": "http://220.132.27.128:9000", "note": ""}, {"name": "未來玩城市", "url": "http://59.127.166.55:9000", "note": ""}, {"name": "沐提斯", "url": "http://59.127.135.3:9000", "note": ""}, {"name": "河歌山", "url": "http://122.117.49.24:9000", "note": ""}, {"name": "流行城市", "url": "http://59.127.190.217:9000", "note": ""}, {"name": "海科棧", "url": "http://220.133.182.137:9000", "note": ""}, {"name": "溫莎堡", "url": "http://220.135.131.72:9000", "note": ""}, {"name": "獅甲國宅", "url": "http://59.125.159.177:9000", "note": ""}, {"name": "祥城", "url": "http://114.35.240.155:9000", "note": ""}, {"name": "築夢世紀", "url": "http://122.117.49.169:9000", "note": ""}, {"name": "芳崗高鐵樓", "url": "http://125.227.227.47:9000", "note": ""}, {"name": "荷必館", "url": "http://211.75.228.156:9000", "note": ""}, {"name": "蔚藍海18", "url": "http://122.117.49.155:9000", "note": ""}, {"name": "赫米斯", "url": "http://122.117.49.133:9000", "note": ""}, {"name": "輕軌線上", "url": "http://60.249.137.193:9000", "note": ""}, {"name": "達麗宮廷", "url": "http://122.117.213.79:9000", "note": ""}, {"name": "陽光新未來", "url": "http://114.33.57.152:9000", "note": ""}, {"name": "飛揚大樓", "url": "http://220.133.182.97:9000", "note": ""}, {"name": "鳳凰時代", "url": "http://122.117.49.250:9000", "note": ""}, {"name": "興連城PRO+", "url": "http://220.133.21.209:9000", "note": ""}];
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 const col = collection(db, "buildings");
 
 let buildings = [];
@@ -160,7 +181,7 @@ async function seedIfEmpty() {
   localStorage.setItem("rb_seed_simple_done","1");
   for (const b of DEFAULT_BUILDINGS) {
     await setDoc(doc(db, "buildings", idFor(b.name)), {
-      name:b.name, url:b.url, note:b.note || "", hub:[], createdAt:serverTimestamp(), updatedAt:serverTimestamp()
+      name:b.name, url:b.url, note:b.note || "", hub:[], photos:[], createdAt:serverTimestamp(), updatedAt:serverTimestamp()
     }, {merge:true});
   }
 }
@@ -169,7 +190,7 @@ onSnapshot(col, async snap => {
   remoteUpdate = true;
   buildings = snap.docs.map(d => {
     const x = d.data();
-    return { id:d.id, name:x.name || "", url:x.url || "", note:x.note || "", hub:Array.isArray(x.hub)?x.hub:[], updatedAt:x.updatedAt || null };
+    return { id:d.id, name:x.name || "", url:x.url || "", note:x.note || "", hub:Array.isArray(x.hub)?x.hub:[], photos:Array.isArray(x.photos)?x.photos:[], updatedAt:x.updatedAt || null };
   });
   if (buildings.length === 0) {
     $("status").textContent = "第一次初始化大樓資料中...";
@@ -178,7 +199,7 @@ onSnapshot(col, async snap => {
   buildings.sort((a,b)=>a.name.localeCompare(b.name,"zh-Hant"));
   $("status").textContent = "✅ 雲端同步中，共 " + buildings.length + " 棟大樓";
   renderList();
-  if (currentId && getCurrent()) { fillDetail(getCurrent(), false); if ($("hubPage").style.display === "block") renderHub(); }
+  if (currentId && getCurrent()) { fillDetail(getCurrent(), false); if ($("hubPage").style.display === "block") renderHub(); if ($("detail").style.display === "block") renderPhotos(); }
   setTimeout(()=>remoteUpdate=false,0);
 }, err => {
   console.error(err);
@@ -219,6 +240,7 @@ function fillDetail(b, overwrite=true) {
   $("fNote").value = b.note || "";
   $("rbBtn").href = b.url || "#";
   $("lastUpdate").textContent = b.updatedAt?.toDate ? "最後更新：" + b.updatedAt.toDate().toLocaleString("zh-TW") : "";
+  renderPhotos();
 }
 
 async function saveCurrent(manual=false) {
@@ -231,7 +253,7 @@ async function saveCurrent(manual=false) {
   $("saveState").textContent = "同步中...";
   try {
     await setDoc(doc(db,"buildings",newId), {
-      name, url, note:$("fNote").value, hub:old?.hub || [], updatedAt:serverTimestamp()
+      name, url, note:$("fNote").value, hub:old?.hub || [], photos:old?.photos || [], updatedAt:serverTimestamp()
     }, {merge:true});
     currentId = newId;
     $("saveState").textContent = manual ? "✅ 已儲存" : "✅ 已自動同步";
@@ -272,11 +294,113 @@ $("modalSave").onclick = async () => {
   if (!name || !url) return alert("名稱和網址都要填");
   const id = idFor(name);
   await setDoc(doc(db,"buildings",id), {
-    name, url, note:"", hub:[], createdAt:serverTimestamp(), updatedAt:serverTimestamp()
+    name, url, note:"", hub:[], photos:[], createdAt:serverTimestamp(), updatedAt:serverTimestamp()
   }, {merge:true});
   $("modal").style.display = "none";
   openDetail(id);
 };
+
+
+$("photoFile").onchange = async () => {
+  const file = $("photoFile").files[0];
+  const b = getCurrent();
+  if (!file || !b) return;
+
+  const note = prompt("輸入這張照片上方的備註：", "") ?? "";
+  $("photoState").textContent = "照片上傳中...";
+
+  try {
+    const safeName = file.name.replace(/[^\w.\-]+/g, "_");
+    const path = `buildingPhotos/${b.id}/${Date.now()}_${safeName}`;
+    const storageRef = ref(storage, path);
+
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+
+    const photos = [
+      ...(b.photos || []),
+      { id: Date.now().toString(), note, url, path, createdAt: Date.now() }
+    ];
+
+    await setDoc(
+      doc(db, "buildings", b.id),
+      { photos, updatedAt: serverTimestamp() },
+      { merge: true }
+    );
+
+    $("photoState").textContent = "✅ 照片已同步";
+    $("photoFile").value = "";
+  } catch (e) {
+    console.error(e);
+    $("photoState").textContent = "❌ 照片上傳失敗：請確認 Firebase Storage 已啟用與規則";
+  }
+};
+
+function renderPhotos() {
+  const b = getCurrent();
+  if (!b) return;
+
+  const photos = b.photos || [];
+
+  $("photoList").innerHTML = photos.map((p, i) => `
+    <div class="photoCard">
+      <input
+        class="photoNote"
+        data-photo-note="${i}"
+        value="${esc(p.note || "")}"
+        placeholder="這張照片的備註"
+      >
+      <img class="photoImg" src="${esc(p.url)}" alt="${esc(p.note || "照片")}">
+      <div class="photoActions">
+        <a class="btn blue" href="${esc(p.url)}" target="_blank" rel="noopener">放大查看</a>
+        <button class="btn red" data-photo-del="${i}">刪除</button>
+      </div>
+    </div>
+  `).join("");
+
+  document.querySelectorAll("[data-photo-note]").forEach(inp => {
+    inp.onchange = async () => {
+      const b = getCurrent();
+      const photos = JSON.parse(JSON.stringify(b.photos || []));
+      photos[Number(inp.dataset.photoNote)].note = inp.value;
+
+      await setDoc(
+        doc(db, "buildings", b.id),
+        { photos, updatedAt: serverTimestamp() },
+        { merge: true }
+      );
+
+      $("photoState").textContent = "✅ 照片備註已更新";
+    };
+  });
+
+  document.querySelectorAll("[data-photo-del]").forEach(btn => {
+    btn.onclick = async () => {
+      const b = getCurrent();
+      const photos = JSON.parse(JSON.stringify(b.photos || []));
+      const idx = Number(btn.dataset.photoDel);
+      const p = photos[idx];
+
+      if (!confirm("確定刪除這張照片？")) return;
+
+      photos.splice(idx, 1);
+
+      try {
+        if (p.path) await deleteObject(ref(storage, p.path));
+      } catch (e) {
+        console.warn(e);
+      }
+
+      await setDoc(
+        doc(db, "buildings", b.id),
+        { photos, updatedAt: serverTimestamp() },
+        { merge: true }
+      );
+
+      $("photoState").textContent = "✅ 照片已刪除";
+    };
+  });
+}
 
 
 $("hubBtn").onclick = () => {
